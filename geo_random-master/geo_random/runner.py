@@ -2,7 +2,7 @@ import sys
 from geo_random.console import COMMANDS
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':# для запуску програми через косноль
     mode = sys.argv[1]
 
     if mode not in COMMANDS:

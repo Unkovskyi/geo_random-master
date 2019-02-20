@@ -1,6 +1,4 @@
-"""
-doc string goes here
-"""
+
 
 __all__ = ['STORAGE_DIR', 'DEFAULT_SERIALIZER']
 

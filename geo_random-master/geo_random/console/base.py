@@ -12,6 +12,11 @@ __all__ = ['BaseConsoleCommand']
 
 
 class BaseConsoleCommand:
+
+    """
+    Клас для базових команд конслоі, що в конструкторі отримує команди, як аргументи, перевіряє їх на корректність
+    """
+
     command_name = None
 
     def __init__(self, console_args):
@@ -19,4 +24,7 @@ class BaseConsoleCommand:
         self.console_args = console_args
 
     def run(self):
+        """
+        Перевірка на помилки, щодо коректності введених в конслоь даних
+        """
         raise NotImplementedError()

@@ -23,6 +23,9 @@ SHAPES = {
 
 
 class SimpleConsoleCommand(BaseConsoleCommand):
+    """
+    Клас що унаслідує клас BaseConsoleCommand, в конструкторі отримує аргументи з консолі тип фігури координати точок
+    """
     command_name = 'simple'
 
     def __init__(self, console_args):
@@ -32,12 +35,18 @@ class SimpleConsoleCommand(BaseConsoleCommand):
         self.serializer_cls = get_serializer(DEFAULT_SERIALIZER)
 
     def run(self):
+        """
+        Метод для запуску програми
+        """
         if self.shape_type not in SHAPES:
             raise Exception('Invalid shape type')
 
         shape_cls = SHAPES[self.shape_type]
 
         def map_pints(p):
+            """
+            Метод для створення повернення точок у форматі float
+            """
             x, y = p.split(',')
             return float(x), float(y)
 
@@ -49,4 +58,4 @@ class SimpleConsoleCommand(BaseConsoleCommand):
         serializer = self.serializer_cls(STORAGE_DIR, [shape])
         serializer.store()
 
-        return shape.get_square()
+        return shape.get_square() #Повернення площі фігури

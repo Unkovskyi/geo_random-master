@@ -1,42 +1,75 @@
-
-import string
+"""
+Модуль, в якому описані основні класи для побудови кола, трикутника, прямокутника:точка, лінія, а також медоди роботи з ними
+"""
 
 from math import sqrt
+from  string import ascii_uppercase
 from geo_random.exceptions import InvalidLineException, MaxPointCountExceeded, BaseShapeException
 
 
+
 class Point:
+    """
+    Клас точка
+    """
+
     def __init__(self, x, y):
+        """
+        Коструктор класу, об'єкт з атрибутами х та у
+        """
+
         self.x = x
         self.y = y
 
     def __str__(self):
-        return '({};{})'.format(self.x, self.y)
+        """
+        Представлення об'єкта класу в строковому вигляді
+        """
+        return ('{};{}'.format(self.x,self.y))
+
 
     def __eq__(self, other):
-        assert isinstance(other, Point) or (isinstance(other, tuple) and len(other) == 2)
-
-        if isinstance(other, Point):
-            result = (self.x == other.x and self.y == other.y)
-        else:
-            result = self.x == other[0] and self.y == other[1]
+        assert isinstance(other, Point)
+        result=(self.x==other.x and self.y==other.y)
         return result
 
 
 class Line:
+    """
+    Клас лініяю Клас приймає два об'єкта класу Point
+    """
+
     def __init__(self, p1, p2):
-        assert isinstance(p1, Point)
-        assert isinstance(p2, Point)
+        """
+        Коструктор класу об'єкт з атрибутами р1 та р2 класу Point
+        """
 
         self.p1 = p1
         self.p2 = p2
         self.is_valid()
 
+    def __str__(self):
+        """
+        Представлення об'єкта класа в строковому вигляді
+        """
+        return '(A{},B{})'.format(self.p1,self.p2)
+        #return f'A{self.p1},B{self.p2}' #інший спосіб
+
     def is_valid(self):
-        if self.p1 == self.p2:
+        """
+        Метод класу Line що перевіряє що точки не співпадають
+        """
+        if self.p1==self.p1:
+        #if self.p1.x == self.p2.x and self.p1.y == self.p2.y:
             raise InvalidLineException('P1{} and P2{} are identical'.format(self.p1, self.p2))
 
+
+
+
     def get_distance(self):
+        """
+        Метод класу Line що по факту повертає відстань між точками
+        """
         x = self.p1.x - self.p2.x
         y = self.p1.y - self.p2.y
         result = sqrt(x ** 2 + y ** 2)
@@ -45,21 +78,38 @@ class Line:
 
     @property
     def distance(self):
-        return self.get_distance()
+        """
+        Метод класу Line що повертає функцію get_distance а декоратор @property дозволяэ це робити без дужок
+        """
 
-    def __str__(self):
-        return 'A{p1}; B{p2}'.format(p1=self.p1, p2=self.p2)
+        return self.get_distance()
 
 
 class BaseShape:
+    """
+    Базовий клас
+    """
+
     max_points = 0
 
     def __init__(self, points=None):
+
+        """
+        Коструктор класу об'єкт з атрибутами точки та лінії а також методом is_valid
+        """
+
         self.points = points or list()
         self.lines = list()
         self.is_valid()
 
+    # def __str__(self):
+    #     return ', '.join(self.points.__str__())
+
+
     def add_point(self, point):
+        """
+        Метод класу BaseShape, що додає точку та вставляє її у список при цьому перевіряє чи співпадають точки
+        """
         self.points.append(point)
 
         try:
@@ -69,26 +119,35 @@ class BaseShape:
             raise e
 
     def is_valid(self):
+        """
+        Перевизначення методу is_valid який переіряє що фігура коректна
+        """
         if len(self.points) > self.max_points:
             raise MaxPointCountExceeded('Allowed {} but got {}'.format(self.max_points, len(self.points)))
 
         return True
 
     def get_square(self):
+        """
+        Метод класу BaseShape для визначення площі фігури
+        """
         raise NotImplementedError()
 
     def build_lines(self):
+        """
+        Метод класу BaseShape для створення лінії
+        """
+
         raise NotImplementedError()
 
     def __str__(self):
-        point_strings = []
-
-        for idx, point in enumerate(self.points):
-            point_letter = string.ascii_uppercase[idx]
-            point_str = '{letter}{point}'.format(letter=point_letter, point=point)
-            point_strings.append(point_str)
-
-        shape_name = self.__class__.__name__.lower().replace('shape', '').capitalize()
-        result = '{shape_name}: {points}'.format(shape_name=shape_name, points=','.join(point_strings))
-
+        """
+        Представлення об'єкта класа в строковому вигляді
+        """
+        result=' '
+        point_string=[str(p) for p in self.points]
+        point_with_letter=[]
+        for idx,p in enumerate(point_string):
+            point_with_letter.append(ascii_uppercase[idx]+p)
+            result=','.join(point_with_letter)
         return result

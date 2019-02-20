@@ -14,6 +14,9 @@ from os import path
 
 
 class BaseShapeSerializer:
+    """
+    Клас сералізації, що в конструкторі отримує шлях, та фігуру
+    """
     file_extension = 'default'
 
     def __init__(self, dir_path, shapes):
@@ -27,6 +30,10 @@ class BaseShapeSerializer:
         self.shapes = shapes
 
     def store(self):
+        """
+        Метод класу, що зберігає дані серіалізації до файлу
+        """
+
         for idx, shape in enumerate(self.shapes):
             file_name = self.generate_file_name(shape, idx)
             serialized_shape = self.serialize_instance(shape)
@@ -37,6 +44,9 @@ class BaseShapeSerializer:
                 f.write(serialized_shape)
 
     def restore(self):
+        """
+        Метод класу, що дозволяє відновити файл до попереднього стану
+        """
         result = []
 
         for file_name in os.listdir(self.dir_path):
@@ -54,12 +64,21 @@ class BaseShapeSerializer:
         return result
 
     def serialize_instance(self, shape_instance):
+        """
+        Метод класу, для перевірки помилок при серіалізації екземплару класу
+        """
         raise NotImplementedError()
 
     def deserializer_instance(self, shape_data):
+        """
+        Метод класу, для перевірки помилок при десеріалізації екземплару класу
+        """
         raise NotImplementedError()
 
     def generate_file_name(self, shape, idx):
+        """
+        Метод класу для створення імені файлув якому буде зберігатися дані серіалізації
+        """
         class_name = type(shape).__name__
         file_name = '{class_name}_{idx}.{extension}'.format(class_name=class_name, idx=idx, extension=self.file_extension)
         return file_name
